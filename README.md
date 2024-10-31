@@ -158,4 +158,4 @@ This will simply create a new configuration based on the limit and window provid
 
 ## Additional Notes
 Tested to see whether mutex was correctly implemented. Based on testing done, mutex is correct and it should be able to handle concurrent requests correctly:
-![Screenshot](rate-limiter/screenshot/mutex_test.png)
+![Screenshot](/screenshot/mutex_test.png)
