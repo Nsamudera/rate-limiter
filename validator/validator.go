@@ -64,6 +64,12 @@ func (rl *RateLimiter) ValidateRequestLimit(clientID string, currentTime time.Ti
 	} else {
 		// Create new config so we can keep track of future requests
 		data[clientID] = RateLimiterData{requests, limit, window, currentTime}
+
+		log.Printf("Starting Request: %v / %v", data[clientID].Requests, data[clientID].Limit)
+		log.Printf("currentTime: %v\n", currentTime)
+		log.Printf("firstRequestTime: %v\n", data[clientID].FirstRequestTime)
+		log.Printf("difference: %v\n", currentTime.Sub(data[clientID].FirstRequestTime))
+		log.Printf("window: %v\n", data[clientID].Window)
 	}
 
 	// Check to see if client has reached the limit

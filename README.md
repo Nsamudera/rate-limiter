@@ -47,9 +47,9 @@ The rate limiter considered was either the fixed window algorithm or the sliding
 Fixed window consideration
 * For example, every 1 hour will mean that the limit will refresh at 00:00, 01:00, 02:00, etc
     * Pros:
-      *  Refresh window is uniform (easy to remember). For example, if it refreshes every hour, we know it'll refresh on 00:00, 00:01, etc. If it refreshes every 10 minutes, we know it'll refresh on 00:00, 00:10, etc 
+      *  Refresh window is uniform (easy to remember). For example, if it refreshes every hour, we know it'll refresh on 00:00, 01:00, etc. If it refreshes every 10 minutes, we know it'll refresh on 00:00, 00:10, etc 
     * Cons:
-      * Will need a cron that runs each to refresh the limit
+      * Will need a cron to refresh the limit
         * This can be expensive as the number of clients grow
         * This might need more effort to maintain, as we need to consider if clients are no longer active
         * Additional dependency on the cron. If there is issue with the cron, it will impact the rate limit
@@ -154,3 +154,8 @@ This will simply create a new configuration based on the limit and window provid
 | :-------   | :------------------ | :---------- |
 | 400        | No clientID provided | No client ID is provided, which is needed to know who the rate limiter config is for |
 | 400        | Config data must be greater than 0 | General error to show that there is something incorrect in the request body sent. For example, the body is sent using string instead of int. There are other cases, but is generalized for current build |
+
+
+## Additional Notes
+Tested to see whether mutex was correctly implemented. Based on testing done, mutex is correct and it should be able to handle concurrent requests correctly:
+![Screenshot](rate-limiter/screenshot/mutex_test.png)

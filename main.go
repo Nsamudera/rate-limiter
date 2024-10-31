@@ -24,6 +24,17 @@ var mockedRateLimiterConfig = map[string]validator.RateLimiterData{
 	"PT TEST": {Requests: 0, Limit: 1, Window: 10 * time.Second, FirstRequestTime: time.Now()},
 }
 
+var rateLimiterData = validator.RateLimiterData{
+	Requests:         config.DefaultRequest,
+	Limit:            config.DefaultLimit,
+	Window:           config.DefaultWindow,
+	FirstRequestTime: time.Now(),
+}
+var rateLimiter = validator.RateLimiter{
+	RateLimiterData: rateLimiterData,
+	Mutex:           sync.Mutex{},
+}
+
 func main() {
 	// Idea is to have a centralized place to view logs, which in this case is done via a file
 	logFile, logErr := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -57,16 +68,6 @@ func requestHandler(w http.ResponseWriter, r *http.Request) {
 		response.Message = "No clientID provided"
 		json.NewEncoder(w).Encode(response)
 		return
-	}
-	rateLimiterData := validator.RateLimiterData{
-		Requests:         config.DefaultRequest,
-		Limit:            config.DefaultLimit,
-		Window:           config.DefaultWindow,
-		FirstRequestTime: currentTime,
-	}
-	rateLimiter := validator.RateLimiter{
-		RateLimiterData: rateLimiterData,
-		Mutex:           sync.Mutex{},
 	}
 	rateLimiterCheck := rateLimiter.ValidateRequestLimit(clientID, currentTime, mockedRateLimiterConfig)
 
